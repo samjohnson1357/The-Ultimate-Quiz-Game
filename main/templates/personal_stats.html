@@ -1,0 +1,140 @@
+
+{% extends 'base.html' %}
+
+{% block title %}
+Stats Plot
+{% endblock %}
+
+{% block content %}
+
+<div class="margins">
+
+  <h2 class="centered-header">Personal Stats</h2>
+
+  <!-- Row 1: The dropdowns -->
+  <div class="default-flex-container bottom-margin">
+
+    <!-- The category dropdown. -->
+    <div class="right-margin">
+      <label for="category-drop-down"> Category: </label>
+      <select name="category-selector" id="category-drop-down" onchange="requestPersonalStatsData()"> 
+        {% for category in categories %}
+        <option value="{{category}}">{{category}}</option>
+        {% endfor %}
+      </select>
+    </div>
+
+    <!-- The difficulty dropdown. -->
+    <div class="right-margin">
+      <label for="difficulty-drop-down"> Difficulty: </label>
+      <select name="difficulty-selector" id="difficulty-drop-down" onchange="requestPersonalStatsData()"> 
+        {% for difficulty in difficulties %}
+        <option value="{{difficulty}}">{{difficulty}}</option>
+        {% endfor %}
+      </select>
+    </div>
+
+  </div>
+
+  <div class="chart-container">
+    <canvas id="score-line-plot"></canvas>
+  </div>
+
+</div>
+
+<script>
+
+function requestPersonalStatsData() {
+  let url = getRequestURL()
+  // fetch(url).then(response => response.json()).then(response => populateLeaderboard(response))
+  fetch(url).then(response => response.json()).then(response => drawScoreLineChart(response))
+}
+
+function getSelectedCategory() {
+  return document.getElementById("category-drop-down").value;
+}
+
+function getSelectedDifficulty() {
+  return document.getElementById("difficulty-drop-down").value;
+}
+
+function getRequestURL() {
+  let baseUrl = window.location.origin;
+  let url = new URL("/personal-stats-get-request/", baseUrl);
+  url.searchParams.append("category", getSelectedCategory() );
+  url.searchParams.append("difficulty", getSelectedDifficulty() );
+  return url.href;
+}
+
+function getChartInstance(response) {
+  /*
+  The reason we return a chart instance is so we can initialize a global CHART instance and then update it each time
+  there's new data.
+  */
+  let canvas = document.getElementById('score-line-plot');
+  const context = canvas.getContext('2d');
+
+  // Create a new chart instance.
+  return new Chart(context, {
+      type: 'line',
+      data: {
+          labels: response['dateTimes'],
+          datasets: [
+              {
+                  label: 'Score',
+                  data: response['scores'],
+                  borderColor: 'blue',
+                  backgroundColor: 'transparent',
+                  pointRadius: 5,
+                  pointBackgroundColor: 'blue',
+                  fill: false,
+              },
+          ],
+      },
+      options: {
+          responsive: true,
+          scales: {
+              x: {
+                  type: 'time',
+                  time: {
+                      unit: 'day',
+                      displayFormats: {
+                          hour: 'MM-dd-yyyy HH:mm',
+                          day: 'MM-dd-yyyy'
+                      },
+                  },
+                  scaleLabel: {
+                      display: true,
+                      labelString: 'Date',
+                  },
+              },
+              y: {
+                  beginAtZero: true,
+                  suggestedMin: 0,
+                  suggestedMax: 10,
+                  scaleLabel: {
+                      display: true,
+                      labelString: 'Score',
+                  },
+              },
+          },
+      },
+  })
+}
+
+function drawScoreLineChart(response) {
+  // Delete the CHART global variable and set it equal to a new chart instance.
+  if (typeof CHART !== 'undefined') {
+      CHART.destroy();
+  }
+  CHART = getChartInstance(response)
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+  requestPersonalStatsData();
+});
+
+</script>
+
+{% endblock %}
+

@@ -1,0 +1,61 @@
+/*
+This is our style-sheet. The elements are organized in roughly the same order that they appear on the website.
+Many IDs are used to hide HTML elements initially. They are shown later when the user begins the quiz.
+*/
+
+.margins {
+    margin: 1%;
+}
+
+/* We define some colors, so that they are reusable in JavaScript. */
+:root {
+    --green: green;
+    --white: white;
+    --red: red;
+    --dark-purple: #4B4165;
+    --dark-blue: #290E76;
+}
+
+/* This element provides vertical space between the various elements. */
+.bottom-margin {
+    margin-bottom: 10px;
+}
+
+.right-margin {
+    margin-right: 1%;
+}
+
+/* This is the container that's used most of the time. */
+.default-flex-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.question-score-elements {
+    font-weight: bold;
+    visibility: hidden;
+}
+
+.answer-flex-container {
+    display: flex;
+    gap: 2%;
+    justify-content: space-around;
+}
+
+.answer {
+    visibility: hidden;
+    background-color: #290E76;
+    color: var(--white);
+    text-align: center;
+    border-radius: 20px;
+    display: inline;
+    padding: 1%;
+    flex-grow: 1;
+    align-self: center;
+}
+
+.centered-header {
+    text-align: center;
+}
+

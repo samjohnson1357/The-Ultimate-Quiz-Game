@@ -1,0 +1,105 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Leaderboard
+{% endblock %}
+
+{% block content %}
+
+<div class="margins">
+  <h2 class="centered-header">Leaderboard</h2>
+
+  <!-- Row 1: The dropdowns -->
+  <div class="default-flex-container bottom-margin">
+
+    <!-- The category dropdown. -->
+    <div class="right-margin">
+      <label for="category-drop-down"> Category: </label>
+      <select name="category-selector" id="category-drop-down" onchange="requestLeaderboardScoreData()"> 
+        {% for category in categories %}
+        <option value="{{category}}">{{category}}</option>
+        {% endfor %}
+      </select>
+    </div>
+
+    <!-- The difficulty dropdown. -->
+    <div class="right-margin">
+      <label for="difficulty-drop-down"> Difficulty: </label>
+      <select name="difficulty-selector" id="difficulty-drop-down" onchange="requestLeaderboardScoreData()"> 
+        {% for difficulty in difficulties %}
+        <option value="{{difficulty}}">{{difficulty}}</option>
+        {% endfor %}
+      </select>
+    </div>
+
+  </div>
+
+  <!-- The leaderboard -->
+  <table class="w3-table-all w3-hoverable" id="leaderboard-table">
+    <tr class="w3-green">
+      <th>Rank</th>
+      <th>Username</th>
+      <th>Date</th>
+      <th>Score</th>
+    </tr>
+  </table>
+
+</div>
+
+<script>
+
+function requestLeaderboardScoreData() {
+  let url = getRequestURL()
+  fetch(url).then(response => response.json()).then(response => populateLeaderboard(response))
+}
+
+function getRequestURL() {
+  let category = document.getElementById("category-drop-down").value;
+  let difficulty = document.getElementById("difficulty-drop-down").value;
+  let baseUrl = window.location.origin;
+  let url = new URL("/score-get-request/", baseUrl);
+  url.searchParams.append("category", category);
+  url.searchParams.append("difficulty", difficulty);
+  return url.href;
+}
+
+function formatDateTimeToDateString(datetime) {
+  const options = { year: 'numeric', month: 'long', day: 'numeric' };
+  return new Intl.DateTimeFormat('en-US', options).format(new Date(datetime));
+}
+
+function populateLeaderboard(response) {
+  let table = document.getElementById("leaderboard-table")
+
+  // Remove all table rows, excluding the header (the first row).
+  for (let i = table.rows.length - 1; i > 0; i--) {
+    table.deleteRow(i);
+  }
+
+  // Populate the table with data received from the server.
+  let rank = 1
+  for (let scoreDict of response['scores']) {
+    let row = table.insertRow();
+    let rankCell = row.insertCell(0);
+    let usernameCell = row.insertCell(1);
+    let dateCell = row.insertCell(2);
+    let scoreCell = row.insertCell(3);
+
+    if (scoreDict['username'] === response['username']) {
+      // row.style.backgroundColor = 'red'
+      row.classList.add('w3-red');
+    }
+    
+    rankCell.textContent = rank;
+    usernameCell.textContent = scoreDict['username'];
+    dateCell.textContent = formatDateTimeToDateString(scoreDict['dateTime']);
+    scoreCell.textContent = scoreDict['score'];
+    rank++
+  }
+}
+
+requestLeaderboardScoreData()
+
+</script>
+
+{% endblock %}

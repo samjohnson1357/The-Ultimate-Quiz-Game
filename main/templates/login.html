@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Login
+{% endblock %}
+
+{% block content %}
+
+<div class="margins">
+    <h2>User Login</h2>
+    <form method="post">
+        {% csrf_token %}
+        <table>
+            {{ form.as_table }}
+        </table>
+        <input type="submit" value="Login">
+    </form>
+    {% if error_message %}
+    <br>
+        <p class="text-bg-danger">{{ error_message }}</p>
+    {% endif %}
+
+    <a href="{% url 'register' %}"> Click here to register </a>
+
+</div>
+
+{% endblock %}

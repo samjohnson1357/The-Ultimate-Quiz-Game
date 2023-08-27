@@ -1,0 +1,126 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}
+Quiz Game
+{% endblock %}
+
+{% block content %}
+
+<div class="margins">
+
+  <br>
+
+  <!-- Row 1: The dropdowns -->
+  <div class="default-flex-container bottom-margin">
+    <!-- The category dropdown. We add the options dynamically through javascript. -->
+    <div class="right-margin">
+      <label for="category-drop-down"> Category: </label>
+      <select name="category-selector" id="category-drop-down"> 
+        {% for category in categories %}
+          <option value="{{category}}">{{category}}</option>
+        {% endfor %}
+      </select>
+    </div>
+
+    <!-- The difficulty dropdown. We add the options dynamically through JavaScript. -->
+    <div class="right-margin">
+      <label for="difficulty-drop-down"> Difficulty: </label>
+      <select name="difficulty-selector" id="difficulty-drop-down"> 
+        {% for difficulty in difficulties %}
+        <option value="{{difficulty}}">{{difficulty}}</option>
+        {% endfor %}
+      </select>
+    </div>
+
+  </div>
+
+  <!-- Row 2: Begin quiz button -->
+  <div class="default-flex-container bottom-margin">
+    <button type="button" class="w3-button w3-ripple w3-green" id="begin-quiz-button" onclick="beginQuiz()"> Begin Quiz </button>
+  </div>
+
+  <!-- Row 3: The question number and the current score -->
+  <div class="default-flex-container bottom-margin">
+    <p class="question-score-elements right-margin" id="question-number"> Question 1/10 </p>
+    <p class="question-score-elements right-margin" id="current-score"> Current Score: 0/10 </p>
+  </div>
+
+  <!-- Row 4: The question -->
+  <div class="default-flex-container bottom-margin">
+    <p class="question-score-elements" id="question"> What is the biggest state in the US? </p>
+  </div>
+
+<!-- Row 5: The answer options -->
+  <div class="answer-flex-container bottom-margin">
+    <p class="answer"> Texas </p>
+    <p class="answer"> Alaska </p>
+    <p class="answer"> New York </p>
+    <p class="answer"> California </p>
+  </div>
+
+<!-- Modal showing the final score -->
+<div class="modal" id="quiz-score-modal">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+
+      <!-- Modal Header -->
+      <div class="modal-header">
+        <h4 class="modal-title">Quiz Complete!</h4>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+
+      <!-- Modal body -->
+      <div class="modal-body" id="final-score-modal-body">
+        <p>You scored <span id="final-score-span-element"></span>/10!</p>
+
+        <!-- The idea is that one div can be displayed when the user is logged in and one when the user is logged out. -->
+        <div id="logged-in-modal-body" style="display:none">
+          <p>Your score has been saved. You can now view your scores on the <a href="{% url 'personal-stats' %}">Personal Stats</a> or <a href="{% url 'leaderboard' %}">Leaderboard</a> pages.</p>
+        </div>
+
+        <div id="not-logged-in-modal-body" style="display:none">
+          <p><a href="{% url 'login' %}">Login</a> or <a href="{% url 'register' %}">register</a> 
+            to have your scores saved in the future. This will enable you to view your personal stats and participate in the 
+            leaderboard.</p>
+        </div>
+
+      </div>
+
+      <!-- Modal footer -->
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Close</button>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+</div>
+
+<!-- Local files: They do have to be down here. One file has a global variable that immediately accesses an ID. -->
+<script src="{% static 'utility_functions.js' %}"> </script>
+<script src="{% static 'setup_quiz_game.js' %}"> </script>
+<script src="{% static 'query_api.js' %}"> </script>
+<script src="{% static 'run_quiz_game.js' %}"> </script>
+
+<!-- We load in the audio files. We previously did this with JavaScript but that doesn't work in Django. -->
+<audio id="correct-answer-sound">
+  <source src="{% static 'correct-answer.wav' %}" type="audio/mpeg">
+  Your browser does not support the audio element.
+</audio>
+
+<audio id="incorrect-answer-sound">
+  <source src="{% static 'wrong-answer.mp3' %}" type="audio/mpeg">
+  Your browser does not support the audio element.
+</audio>
+
+<script>
+  setAnswerMouseOverEvents()
+  // Load the audio files so that there is no delay in playing them.
+  document.getElementById('incorrect-answer-sound').load()
+  document.getElementById('correct-answer-sound').load()
+</script>
+
+{% endblock %}
+
