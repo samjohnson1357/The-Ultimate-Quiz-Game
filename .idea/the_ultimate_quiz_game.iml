@@ -4,6 +4,8 @@
     <content url="file://$MODULE_DIR$" />
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="module" module-name="Python-Data-Projects" />
+    <orderEntry type="module" module-name="Go Backtester MySQL" />
   </component>
   <component name="PyDocumentationSettings">
     <option name="format" value="PLAIN" />

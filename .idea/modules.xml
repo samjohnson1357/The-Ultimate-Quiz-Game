@@ -2,6 +2,8 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
+      <module fileurl="file://$PROJECT_DIR$/../../NorgateDataBacktesting/Go Backtester MySQL/.idea/Go Backtester MySQL.iml" filepath="$PROJECT_DIR$/../../NorgateDataBacktesting/Go Backtester MySQL/.idea/Go Backtester MySQL.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../../Qnergy/Python-Data-Projects/.idea/Python-Data-Projects.iml" filepath="$PROJECT_DIR$/../../Qnergy/Python-Data-Projects/.idea/Python-Data-Projects.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/the_ultimate_quiz_game.iml" filepath="$PROJECT_DIR$/.idea/the_ultimate_quiz_game.iml" />
     </modules>
   </component>
