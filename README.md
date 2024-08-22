@@ -1,7 +1,6 @@
 # The Ultimate Quiz Game
 
 The Ultimate Quiz Game is a complete web app designed to provide a fun experience for its users. 
-Go to [quizgame.site](https://quizgame.site) to play.
 
 ## Playing the Game
 1.  Select a category.
